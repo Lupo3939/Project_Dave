@@ -1,1 +1,547 @@
 
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package project;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.Graphics2D;
+import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import static javax.imageio.ImageIO.read;
+import javax.swing.*;
+import static project.Project.initial;
+
+/**
+ *
+ * @author Jonathan
+ */
+public class Project extends JFrame{
+    private static final int WIDTH = 1152;
+    private static final int HEIGHT = 720;
+    //Put things like area booleans here to be edited inside of loadGame
+    public static void main(String[] args) throws IOException
+    {
+        initial();
+    }
+    public static void initial() throws IOException 
+    {
+        Dangan game = new Dangan(1152, 720);
+        game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        game.setVisible(true);
+        
+    }
+}
+
+class Dangan extends JFrame
+// <editor-fold defaultstate="collapsed" desc=" DESCRIPTION ">
+{
+    private BufferedImage image = new BufferedImage(1440, 900, BufferedImage.TYPE_INT_ARGB);
+    boolean mainMen = true;
+    public Dangan(int width, int height) throws IOException {
+        this.setTitle("Jonathan's Game");
+        this.setSize(width, height);
+        File img = new File("/Users/Lupo/Desktop/Dave's Project/Junko Resized 2.jpg");
+        BufferedImage image = read(img);
+        JLabel label = new JLabel(new ImageIcon(image));
+        label.setFocusable(true);
+        JPanel panel = new JPanel();
+        panel.setFocusable(true);
+        panel.add(label);
+        panel.repaint();
+        this.add(panel);
+        addMenu();
+    }
+    
+    private void addMenu() {
+        JMenu Menu1 = new JMenu("File");
+        JMenuItem MainMenu = new JMenuItem("Main Menu");
+        
+        MainMenu.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+                try { 
+                    initial();
+                } catch (IOException ex) {
+                    Logger.getLogger(Project.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+        JMenuItem exit = new JMenuItem("Exit");
+        
+        exit.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+               System.exit(0); 
+            }
+        });
+        Menu1.add(MainMenu);
+        Menu1.add(exit);
+        JMenuBar menuBar = new JMenuBar();
+        menuBar.add(Menu1);
+        setJMenuBar(menuBar);
+        
+        addMouseListener(new MouseAdapter() 
+        {
+        public void mouseClicked(MouseEvent event)
+        {
+            int x = event.getX();
+            int y = event.getY();
+            if(x < 362 && x > 86 && y < 460 && y > 340)
+            {
+                try {
+                    newGame();
+                } catch (IOException ex) {
+                    Logger.getLogger(Dangan.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            if(x < 1065 && x > 780 && y < 460 && y > 335)
+            {
+                try {
+                    loadGame();
+                } catch (IOException ex) {
+                    Logger.getLogger(Dangan.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            if(x < 362 && x > 86 && y < 670 && y > 545)
+            {
+                try {
+                    plot();
+                } catch (IOException ex) {
+                    Logger.getLogger(Dangan.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            if(x < 1065 && x > 790 && y < 665 && y > 540)
+            {
+                try {
+                    credits();
+                } catch (IOException ex) {
+                    Logger.getLogger(Dangan.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                System.exit(0);
+            }
+        }
+        } 
+    );
+        
+        
+    }    
+    
+    public void newGame() throws IOException {
+   //initialize variables
+   //proceed to run game
+   System.out.println("New Game Loser");
+   setVisible(false);
+   Game game = new Game(640, 640);
+   game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+   game.setVisible(true);
+}
+
+public void loadGame() throws IOException {
+    //File chooser to pick a save file
+    //Read text doc and assign variables values
+    //Proceed to run game
+    System.out.println("Loading game like a pro");
+}
+
+public void endScreen() {}
+
+
+public void transition() {
+    //in an array of BufferedImages, calculate the difference between an area and any adjacent areas
+    //I think I can produce a sliding effect by displaying them sort of similar to the interpolation of colors
+    //HAS TO BE THREADED OR I'M SURE IT WILL KILL THE PROGRAM
+}
+
+public void plot() throws IOException {
+    //Generate an image that contains the basic plot as text on the screen, maybe in paint, and output it
+    File img = new File("/Users/Lupo/Desktop/Dave's Project/plot.jpg");
+    BufferedImage image = read(img);
+    displayBufferedImage(image);
+}
+
+
+public void credits() throws IOException {
+    File img = new File("/Users/Lupo/Desktop/Dave's Project/credits pic.jpg");
+    BufferedImage image = read(img);
+    displayBufferedImage(image);
+}
+
+    
+public void displayBufferedImage(BufferedImage image)
+{
+    this.setContentPane(new JScrollPane(new JLabel(new ImageIcon(image))));
+    this.validate();
+        
+}
+}
+
+class Game extends JFrame
+{
+    
+    boolean finished = false;
+    int areaNum = 5;
+    Vector<BufferedImage> areas = new Vector();
+    public final int MBF = 17;
+    private int frameNumber;
+    private int STEPS = 100;
+    private ImageIcon icon = new ImageIcon();
+    public int width = 0;
+    public int height = 0;
+    BufferedImage image = new BufferedImage(640,640,BufferedImage.TYPE_INT_ARGB);
+    BufferedImage temp = new BufferedImage(640,640,BufferedImage.TYPE_INT_ARGB);
+    Graphics2D g2d = (Graphics2D) image.createGraphics();
+    
+    public Game(int x, int y) throws IOException
+    {
+        setTitle("Welcome");
+        setSize(x,y);
+        File img = new File("/Users/Lupo/Desktop/Dave's Project/Area5.jpg");
+        image = read(img);
+        BufferedImage sprite = null;
+        File img2 = new File("/Users/Lupo/Desktop/Dave's Project/MainChar2.png");
+        try {
+            sprite = read(img2);
+            } catch (IOException ex) {
+            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        g2d = (Graphics2D) image.createGraphics();
+        g2d.drawImage(sprite, playerX,playerY, null);
+        icon.setImage(image);
+        JLabel label = new JLabel(icon);
+        JPanel panel = new JPanel();
+        panel.add(label);
+        panel.repaint();
+        this.add(panel);
+        initialize();
+        addMenu();
+    }
+    
+    public int playerX = 319;
+    public int playerY = 319;
+    
+    
+private void addMenu() {
+        JMenu Menu1 = new JMenu("File");
+        JMenuItem MainMenu = new JMenuItem("Main Menu");
+        
+        MainMenu.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+                try { 
+                    setVisible(false);
+                    initial();
+                } catch (IOException ex) {
+                    Logger.getLogger(Project.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+        JMenuItem exit = new JMenuItem("Exit");
+        
+        exit.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+               System.exit(0); 
+            }
+        });
+        Menu1.add(MainMenu);
+        Menu1.add(exit);
+        
+        JMenuItem save = new JMenuItem("Save");
+        
+        save.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event)
+            {
+                save();
+            }
+        });
+        
+        JMenu fileMenu = new JMenu("Options");
+        fileMenu.add(save);
+        Menu1.add(exit);
+        JMenuBar menuBar = new JMenuBar();
+        menuBar.add(Menu1);
+        menuBar.add(fileMenu);
+        setJMenuBar(menuBar);
+
+        addMouseListener(new MouseAdapter()
+            {
+                public void mouseClicked(MouseEvent event)
+                {
+                    int x = event.getX();
+                    int y = event.getY();
+                    if(x > 0 && x < 320 && y < 320 && y > 0)
+                    {
+                        playerY = playerY - 16;
+                    }
+                    if(x > 320 && x < 640 && y < 320 && y > 0)
+                    {
+                        playerY = playerY + 16;
+                    }
+                    if(x > 0 && x < 320 && y < 640 && y > 320)
+                    {
+                        playerX = playerX - 16;
+                    }
+                    if(x > 320 && x < 640 && y < 640 && y > 320)
+                    {
+                        playerX = playerX + 16;
+                    }
+                    
+                    positionCheck();
+                    BufferedImage sprite = null;
+                    File img = new File("/Users/Lupo/Desktop/Dave's Project/MainChar2.png");
+                    try {
+                         sprite = read(img);
+                    } catch (IOException ex) {
+                        Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    temp = areas.get(areaNum - 1);
+                    
+                    for(int i = 0; i < 640; ++i)
+                    {
+                        for(int j = 0; j < 640; ++j)
+                            image.setRGB(i,j,temp.getRGB(i,j));
+                    }
+                    g2d = image.createGraphics();
+                    g2d.drawImage(sprite,playerX,playerY,null);
+                    icon.setImage(image);
+                    repaint();
+                }
+            }
+            );
+    } 
+    
+public void positionCheck() 
+{
+    if((areaNum == 1 || areaNum == 4 || areaNum == 7) && playerX < 0)
+        playerX = 0;
+    if((areaNum == 3 || areaNum == 6 || areaNum == 9) && playerX > 575)
+        playerX = 575;
+    if((areaNum == 1 || areaNum == 2 || areaNum == 3) && playerY < 0)
+        playerY = 0;
+    if((areaNum == 7 || areaNum == 8 || areaNum == 9) && playerY > 575)
+        playerY = 575;
+    if(areaNum == 1 && playerX > 639)
+    {
+        playerX = 0;
+        areaNum = 2;
+    }
+    if(areaNum == 1 && playerY > 639)
+    {
+        playerY = 0;
+        areaNum = 4;
+    }
+    if(areaNum == 2 && playerX < 0)
+    {
+        playerX = 639;
+        areaNum = 1;
+    }
+    if(areaNum == 2 && playerX > 639)
+    {
+        playerX = 0;
+        areaNum = 3;
+    }
+    if(areaNum == 2 && playerY > 639)
+    {
+        playerY = 0;
+        areaNum = 5;
+    }
+    if(areaNum == 3 && playerY > 639)
+    {
+        playerY = 0;
+        areaNum = 6;
+    }
+    if(areaNum == 3 && playerX < 0)
+    {
+        playerX = 639;
+        areaNum = 2;
+    }
+    if(areaNum == 4 && playerX > 639)
+    {
+        playerX = 0;
+        areaNum = 5;
+    }
+    if(areaNum == 4 && playerY > 639)
+    {
+        playerY = 0;
+        areaNum = 7;
+    }
+    if(areaNum == 4 && playerY < 0)
+    {
+        playerY = 639;
+        areaNum = 1;
+    }
+    if(areaNum == 5 && playerX < 0)
+    {
+        playerX = 639;
+        areaNum = 4;
+    }
+    if(areaNum == 5 && playerX > 639)
+    {
+        playerX = 0;
+        areaNum = 6;
+    }
+    if(areaNum == 5 && playerY > 639)
+    {
+        playerY = 0;
+        areaNum = 8;
+    }
+    if(areaNum == 5 && playerY < 0)
+    {
+        playerY = 639;
+        areaNum = 2;
+    }
+    if(areaNum == 6 && playerX < 0)
+    {
+        playerX = 639;
+        areaNum = 5;
+    }
+    if(areaNum == 6 && playerY > 639)
+    {
+        playerY = 0;
+        areaNum = 9;
+    }
+    if(areaNum == 6 && playerY < 0)
+    {
+        playerY = 639;
+        areaNum = 3;
+    }
+    if(areaNum == 7 && playerX > 639)
+    {
+        playerX = 0;
+        areaNum = 8;
+    }
+    if(areaNum == 7 && playerY < 0)
+    {
+        playerY = 639;
+        areaNum = 4;
+    }
+    if(areaNum == 8 && playerY < 0)
+    {
+        playerY = 639;
+        areaNum = 5;
+    }
+    if(areaNum == 8 && playerX < 0)
+    {
+        playerX = 639;
+        areaNum = 7;
+    }
+    if(areaNum == 8 && playerX > 639)
+    {
+        playerX = 0;
+        areaNum = 9;
+    }
+    if(areaNum == 9 && playerX < 0)
+    {
+        playerX = 639;
+        areaNum = 8;
+    }
+    if(areaNum == 9 && playerY < 0)
+    {
+        playerY = 639;
+        areaNum = 6;
+    }
+    
+}
+
+public void collisionCheck() 
+{
+    //Add objects to map
+    //Figure out pixel spots to prevent model from overlapping
+}
+
+public void save() {
+    //Figure out Dave's save thing because it shouldn't be hard
+}
+    
+public void initialize() {
+    
+    finished = false;
+    File img = new File("/Users/Lupo/Desktop/Dave's Project/Area1.jpg");
+    BufferedImage Area1 = null;
+            try {
+                Area1 = read(img);
+            } catch (IOException ex) {
+                Logger.getLogger(Dangan.class.getName()).log(Level.SEVERE, null, ex);
+            }
+    areas.add(Area1);
+    img = new File("/Users/Lupo/Desktop/Dave's Project/Area2.jpg");
+    BufferedImage Area2 = null;
+            try {
+                Area2 = read(img);
+            } catch (IOException ex) {
+                Logger.getLogger(Dangan.class.getName()).log(Level.SEVERE, null, ex);
+            }
+    areas.add(Area2);
+    img = new File("/Users/Lupo/Desktop/Dave's Project/Area3.jpg");
+    BufferedImage Area3 = null;
+            try {
+                Area3 = read(img);
+            } catch (IOException ex) {
+                Logger.getLogger(Dangan.class.getName()).log(Level.SEVERE, null, ex);
+            }
+    areas.add(Area3);
+    img = new File("/Users/Lupo/Desktop/Dave's Project/Area4.jpg");
+    BufferedImage Area4 = null;
+            try {
+                Area4 = read(img);
+            } catch (IOException ex) {
+                Logger.getLogger(Dangan.class.getName()).log(Level.SEVERE, null, ex);
+            }
+    areas.add(Area4);
+    img = new File("/Users/Lupo/Desktop/Dave's Project/Area5.jpg");
+    BufferedImage Area5 = null;
+            try {
+                Area5 = read(img);
+            } catch (IOException ex) {
+                Logger.getLogger(Dangan.class.getName()).log(Level.SEVERE, null, ex);
+            }
+    areas.add(Area5);
+    img = new File("/Users/Lupo/Desktop/Dave's Project/Area6.jpg");
+    BufferedImage Area6 = null;
+            try {
+                Area6 = read(img);
+            } catch (IOException ex) {
+                Logger.getLogger(Dangan.class.getName()).log(Level.SEVERE, null, ex);
+            }
+    areas.add(Area6);
+    img = new File("/Users/Lupo/Desktop/Dave's Project/Area7.jpg");
+    BufferedImage Area7 = null;
+            try {
+                Area7 = read(img);
+            } catch (IOException ex) {
+                Logger.getLogger(Dangan.class.getName()).log(Level.SEVERE, null, ex);
+            }
+    areas.add(Area7);
+    img = new File("/Users/Lupo/Desktop/Dave's Project/Area8.jpg");
+    BufferedImage Area8 = null;
+            try {
+                Area8 = read(img);
+            } catch (IOException ex) {
+                Logger.getLogger(Dangan.class.getName()).log(Level.SEVERE, null, ex);
+            }
+    areas.add(Area8);
+    img = new File("/Users/Lupo/Desktop/Dave's Project/Area9.jpg");
+    BufferedImage Area9 = null;
+            try {
+                Area9 = read(img);
+            } catch (IOException ex) {
+                Logger.getLogger(Dangan.class.getName()).log(Level.SEVERE, null, ex);
+            }
+    areas.add(Area9);
+    areaNum = 5;
+    
+}
+}
+
+
+// </editor-fold>
+
+
+
