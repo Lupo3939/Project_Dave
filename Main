@@ -201,7 +201,7 @@ class Game extends JFrame
         File img = new File("/Users/jcorrea/Desktop/Dave's Project/Maps/Area5.png");
         image = read(img);
         BufferedImage sprite = null;
-        File img2 = new File("/Users/jcorrea/Desktop/Dave's Project/MainChar3.png");
+        File img2 = new File("/Users/jcorrea/Desktop/Dave's Project/Characters/Main Forward.png");
         try {
             sprite = read(img2);
             } catch (IOException ex) {
@@ -293,7 +293,7 @@ private void addMenu() {
                     positionCheck();
                     collisionCheck();
                     BufferedImage sprite = null;
-                    File img = new File("/Users/jcorrea/Desktop/Dave's Project/MainChar3.png");
+                    File img = new File("/Users/jcorrea/Desktop/Dave's Project/Characters/Main Forward.png");
                     try {
                          sprite = read(img);
                     } catch (IOException ex) {
@@ -460,16 +460,32 @@ public void collisionCheck()
     {}
     if(areaNum == 5)
     {
-        if(playerY > 447 && (playerX < 253 && playerX > 0))
-           playerY = 447;
+        if((playerY > 360 && playerY < 441) && (playerX < 253 && playerX > 0)) //Left Bottom Wall
+        {
+            if(playerY < 401)
+                playerY = 360;
+            if(playerY > 401)
+                playerY = 441;
         
+        }
+        if(playerY < 441 && playerY > 360 && playerX < 258)
+            playerX = 258; //Left Bottom Wall Right
+        
+        if(playerY < 357 && playerY > 158 && !(playerX > 338 || playerX < 360))
+            playerY = 357; //River
     }
     if(areaNum == 6)
-    {}
+    {
+        
+    }
     if(areaNum == 7)
-    {}
+    {
+        
+    }
     if(areaNum == 8)
-    {}
+    {
+        
+    }
     if(areaNum == 9)
     {}
     //Add objects to map
