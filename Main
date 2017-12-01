@@ -1,4 +1,4 @@
-/*
+/*/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -49,7 +49,7 @@ class Dangan extends JFrame
     public Dangan(int width, int height) throws IOException {
         this.setTitle("Jonathan's Game");
         this.setSize(width, height);
-        File img = new File("/Users/jcorrea/Desktop/Dave's Project/Junko Resized 2.jpg");
+        File img = new File("/Users/Jonathan/Desktop/Dave's Project/Junko Resized 2.jpg");
         BufferedImage image = read(img);
         JLabel label = new JLabel(new ImageIcon(image));
         label.setFocusable(true);
@@ -160,14 +160,14 @@ public void transition() {
 
 public void plot() throws IOException {
     //Generate an image that contains the basic plot as text on the screen, maybe in paint, and output it
-    File img = new File("/Users/jcorrea/Desktop/Dave's Project/plot.jpg");
+    File img = new File("/Users/Jonathan/Desktop/Dave's Project/plot.jpg");
     BufferedImage image = read(img);
     displayBufferedImage(image);
 }
 
 
 public void credits() throws IOException {
-    File img = new File("/Users/jcorrea/Desktop/Dave's Project/credits pic.jpg");
+    File img = new File("/Users/Jonathan/Desktop/Dave's Project/credits pic.jpg");
     BufferedImage image = read(img);
     displayBufferedImage(image);
 }
@@ -193,15 +193,15 @@ class Game extends JFrame
     BufferedImage image = new BufferedImage(640,640,BufferedImage.TYPE_INT_ARGB);
     BufferedImage temp = new BufferedImage(640,640,BufferedImage.TYPE_INT_ARGB);
     Graphics2D g2d = (Graphics2D) image.createGraphics();
-    
+        
     public Game(int x, int y) throws IOException
     {
         setTitle("Welcome");
         setSize(x,y);
-        File img = new File("/Users/jcorrea/Desktop/Dave's Project/Maps/Area5.png");
+        File img = new File("/Users/Jonathan/Desktop/Dave's Project/Maps/Area5.png");
         image = read(img);
         BufferedImage sprite = null;
-        File img2 = new File("/Users/jcorrea/Desktop/Dave's Project/Characters/Main Forward.png");
+        File img2 = new File("/Users/Jonathan/Desktop/Dave's Project/Characters/Main Forward.png");
         try {
             sprite = read(img2);
             } catch (IOException ex) {
@@ -293,7 +293,7 @@ private void addMenu() {
                     positionCheck();
                     collisionCheck();
                     BufferedImage sprite = null;
-                    File img = new File("/Users/jcorrea/Desktop/Dave's Project/Characters/Main Forward.png");
+                    File img = new File("/Users/Jonathan/Desktop/Dave's Project/Characters/Main Forward.png");
                     try {
                          sprite = read(img);
                     } catch (IOException ex) {
@@ -452,12 +452,33 @@ public void collisionCheck()
 {
     if(areaNum == 1)
     {}
+    
     if(areaNum == 2)
     {}
+    
     if(areaNum == 3)
-    {}
+    {
+        if(playerX > 323 && playerY > 300 && playerY < 118)
+        {
+            if(playerY > 280)
+                playerY = 300;
+            if(playerY < 140)
+                playerY = 118;
+        
+        } //River
+        if(playerX < 26 && playerY < 341 && playerY > 146)
+            playerX = 30;
+        if(playerX < 26 && playerY < 132)
+            playerX = 30;
+        if(playerY > 132 && playerY < 200 && playerX < 189)
+            playerX = 189;
+    }
+    
     if(areaNum == 4)
-    {}
+    {
+    
+    }
+    
     if(areaNum == 5)
     {
         if((playerY > 360 && playerY < 441) && (playerX < 253 && playerX > 0)) //Left Bottom Wall
@@ -473,6 +494,86 @@ public void collisionCheck()
         
         if(playerY < 357 && playerY > 158 && !(playerX > 338 || playerX < 360))
             playerY = 357; //River
+        
+        if(playerY > 504 && playerY < 544 && playerX > 160 && playerX < 188)
+        {
+            System.out.println("Hint");
+            if(playerX < 174)
+                playerX = 160;
+            if(playerX > 174)
+                playerX = 188;
+        }
+        if((playerY > 360 && playerY < 441) && (playerX < 616 && playerX > 377)) //Left Bottom Wall
+        {
+            if(playerY < 401)
+                playerY = 360;
+            if(playerY > 401)
+                playerY = 441;
+        } //Right Wall
+        if((playerY > 67 && playerY < 148) && (playerX < 616 && playerX > 377)) //Left Bottom Wall
+        {
+            if(playerY < 124)
+                playerY = 67;
+            if(playerY > 124)
+                playerY = 148;
+        } //Right Wall
+        if(playerY > 602 && playerY < 647 && playerX > 209 && playerX < 240)
+        {
+            if(playerX < 225)
+                playerX = 209;
+            if(playerX > 225)
+                playerX = 240;
+            if(playerY < 625)
+                playerY = 602;
+            if(playerY > 625)
+                playerY = 647;
+        }//Left Tree
+        
+        if(playerY > 495 && playerY < 543 && playerX > 622 && playerX < 653)
+        {
+            if(playerX <= 638)
+                playerX = 622;
+            if(playerX > 638)
+                playerX = 653;
+            if(playerY < 517)
+                playerY = 495;
+            if(playerY > 517)
+                playerY = 543;
+        } //Right Tree
+        
+        if(playerY > 602 && playerY < 647 && playerX > 209 && playerX < 240)
+        {
+            if(playerX < 225)
+                playerX = 209;
+            if(playerX > 225)
+                playerX = 240;
+            if(playerY < 625)
+                playerY = 602;
+            if(playerY > 625)
+                playerY = 647;
+        } //Left Tree
+        if((playerY > 67 && playerY < 148) && (playerX < 339 && playerX > 0)) //Left Bottom Wall
+        {
+            if(playerY < 124)
+                playerY = 67;
+            if(playerY > 124)
+                playerY = 148;
+        
+        } //Left Wall
+        
+        if(playerY < 70 && playerX > 361)
+            playerY = 66;
+        if((playerY < 291 && playerY > 66) && (playerX < 286)) //Left Bottom Wall
+        {
+                playerY = 291;
+        
+        } //River - WIP
+        if((playerY < 291 && playerY > 66) && (playerX > 321)) //Left Bottom Wall
+        {
+                playerY = 291;
+        }
+        if(playerY < 291 && playerX > 286 && playerX < 321)
+            playerY = 66;
     }
     if(areaNum == 6)
     {
@@ -487,7 +588,9 @@ public void collisionCheck()
         
     }
     if(areaNum == 9)
-    {}
+    {
+    
+    }
     //Add objects to map
     //Figure out pixel spots to prevent model from overlapping
 }
@@ -499,7 +602,7 @@ public void save() {
 public void initialize() {
     
     finished = false;
-    File img = new File("/Users/jcorrea/Desktop/Dave's Project/Maps/Area1.png");
+    File img = new File("/Users/Jonathan/Desktop/Dave's Project/Maps/Area1.png");
     BufferedImage Area1 = null;
             try {
                 Area1 = read(img);
@@ -507,7 +610,7 @@ public void initialize() {
                 Logger.getLogger(Dangan.class.getName()).log(Level.SEVERE, null, ex);
             }
     areas.add(Area1);
-    img = new File("/Users/jcorrea/Desktop/Dave's Project/Maps/Area2.png");
+    img = new File("/Users/Jonathan/Desktop/Dave's Project/Maps/Area2.png");
     BufferedImage Area2 = null;
             try {
                 Area2 = read(img);
@@ -515,7 +618,7 @@ public void initialize() {
                 Logger.getLogger(Dangan.class.getName()).log(Level.SEVERE, null, ex);
             }
     areas.add(Area2);
-    img = new File("/Users/jcorrea/Desktop/Dave's Project/Maps/Area3.png");
+    img = new File("/Users/Jonathan/Desktop/Dave's Project/Maps/Area3.png");
     BufferedImage Area3 = null;
             try {
                 Area3 = read(img);
@@ -523,7 +626,7 @@ public void initialize() {
                 Logger.getLogger(Dangan.class.getName()).log(Level.SEVERE, null, ex);
             }
     areas.add(Area3);
-    img = new File("/Users/jcorrea/Desktop/Dave's Project/Maps/Area4.png");
+    img = new File("/Users/Jonathan/Desktop/Dave's Project/Maps/Area4.png");
     BufferedImage Area4 = null;
             try {
                 Area4 = read(img);
@@ -531,7 +634,7 @@ public void initialize() {
                 Logger.getLogger(Dangan.class.getName()).log(Level.SEVERE, null, ex);
             }
     areas.add(Area4);
-    img = new File("/Users/jcorrea/Desktop/Dave's Project/Maps/Area5.png");
+    img = new File("/Users/Jonathan/Desktop/Dave's Project/Maps/Area5.png");
     BufferedImage Area5 = null;
             try {
                 Area5 = read(img);
@@ -539,7 +642,7 @@ public void initialize() {
                 Logger.getLogger(Dangan.class.getName()).log(Level.SEVERE, null, ex);
             }
     areas.add(Area5);
-    img = new File("/Users/jcorrea/Desktop/Dave's Project/Maps/Area6.png");
+    img = new File("/Users/Jonathan/Desktop/Dave's Project/Maps/Area6.png");
     BufferedImage Area6 = null;
             try {
                 Area6 = read(img);
@@ -547,7 +650,7 @@ public void initialize() {
                 Logger.getLogger(Dangan.class.getName()).log(Level.SEVERE, null, ex);
             }
     areas.add(Area6);
-    img = new File("/Users/jcorrea/Desktop/Dave's Project/Maps/Area7.png");
+    img = new File("/Users/Jonathan/Desktop/Dave's Project/Maps/Area7.png");
     BufferedImage Area7 = null;
             try {
                 Area7 = read(img);
@@ -555,7 +658,7 @@ public void initialize() {
                 Logger.getLogger(Dangan.class.getName()).log(Level.SEVERE, null, ex);
             }
     areas.add(Area7);
-    img = new File("/Users/jcorrea/Desktop/Dave's Project/Maps/Area8.png");
+    img = new File("/Users/Jonathan/Desktop/Dave's Project/Maps/Area8.png");
     BufferedImage Area8 = null;
             try {
                 Area8 = read(img);
@@ -563,7 +666,7 @@ public void initialize() {
                 Logger.getLogger(Dangan.class.getName()).log(Level.SEVERE, null, ex);
             }
     areas.add(Area8);
-    img = new File("/Users/jcorrea/Desktop/Dave's Project/Maps/Area9.png");
+    img = new File("/Users/Jonathan/Desktop/Dave's Project/Maps/Area9.png");
     BufferedImage Area9 = null;
             try {
                 Area9 = read(img);
