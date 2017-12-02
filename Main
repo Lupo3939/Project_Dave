@@ -9,10 +9,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.Graphics2D;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import static java.lang.Integer.parseInt;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,11 +49,12 @@ class Dangan extends JFrame
 // <editor-fold defaultstate="collapsed" desc=" DESCRIPTION ">
 {
     private BufferedImage image = new BufferedImage(1440, 900, BufferedImage.TYPE_INT_ARGB);
-    boolean mainMen = true;
+
+    String result = JOptionPane.showInputDialog("What is User?");
     public Dangan(int width, int height) throws IOException {
         this.setTitle("Jonathan's Game");
         this.setSize(width, height);
-        File img = new File("/Users/Jonathan/Desktop/Dave's Project/Junko Resized 2.jpg");
+        File img = new File("/Users/" + result + "/Desktop/Dave's Project/Junko Resized 2.jpg");
         BufferedImage image = read(img);
         JLabel label = new JLabel(new ImageIcon(image));
         label.setFocusable(true);
@@ -160,14 +165,14 @@ public void transition() {
 
 public void plot() throws IOException {
     //Generate an image that contains the basic plot as text on the screen, maybe in paint, and output it
-    File img = new File("/Users/Jonathan/Desktop/Dave's Project/plot.jpg");
+    File img = new File("/Users/" + result + "/Desktop/Dave's Project/plot.jpg");
     BufferedImage image = read(img);
     displayBufferedImage(image);
 }
 
 
 public void credits() throws IOException {
-    File img = new File("/Users/Jonathan/Desktop/Dave's Project/credits pic.jpg");
+    File img = new File("/Users/" + result + "/Desktop/Dave's Project/credits pic.jpg");
     BufferedImage image = read(img);
     displayBufferedImage(image);
 }
@@ -180,9 +185,11 @@ public void displayBufferedImage(BufferedImage image)
         
 }
 }
+// </editor-fold>
 
-class Game extends JFrame
-{
+class Game extends JFrame implements KeyListener
+{// <editor-fold defaultstate="collapsed" desc=" DESCRIPTION ">
+
     
     boolean finished = false;
     int areaNum = 5;
@@ -193,15 +200,44 @@ class Game extends JFrame
     BufferedImage image = new BufferedImage(640,640,BufferedImage.TYPE_INT_ARGB);
     BufferedImage temp = new BufferedImage(640,640,BufferedImage.TYPE_INT_ARGB);
     Graphics2D g2d = (Graphics2D) image.createGraphics();
-        
+    String villain = "Welcome to the world of Ronpa. In this world, everything you know is false. \nThe one responsible for bringing you here is one of the other 'victims'. One of them is telling a lie. \nCan you figure out who it is? \nShould you succeed I will let you go back to your world.";
+    String villain2 = "Congratulations on figuring out that Camilo is the one who brought this upon you all. \nEnjoy the rest of your stay bwahahaha";
+    String trueEnd = "Congratulations. You saw past the deciept of your host and claimed the gift of the blade. You win!";
+    String yilu = "Yilu: (I think I saw something on a sign that resembled this tree pattern.) \nHey get away! All you foreigners are weird. I don't like any of you.";
+    String logan = "Logan: I am Logan. I was hanging out with Happy before all this. \nI've never seen that serious guy before.";
+    String happy = "Stef: How's it hangin? I was with Logan when we all appeared here.";
+    String serious = "Camilo: Yo. You think I'm responsible? \nThat's fair. Well my alibi is that I know Stef and Yilu.";
+    String hint = "*You hear a voice in your head* Become one with the sword, embrace it";
+    String hint2 = "*You hear a voice in your head* Stroke the West sides of the trees";
+    String result = JOptionPane.showInputDialog("What is User?");
+    String ar1 = "/Users/" + result + "/Desktop/Dave's Project/Maps/Area1.png";
+    String ar2 = "/Users/" + result + "/Desktop/Dave's Project/Maps/Area2.png";
+    String ar3 = "/Users/" + result + "/Desktop/Dave's Project/Maps/Area3.png";
+    String ar3alt = "/Users/" + result + "/Desktop/Dave's Project/Maps/Area3Alt.png";
+    String ar4 = "/Users/" + result + "/Desktop/Dave's Project/Maps/Area4.png";
+    String ar5 = "/Users/" + result + "/Desktop/Dave's Project/Maps/Area5.png";
+    String ar6 = "/Users/" + result + "/Desktop/Dave's Project/Maps/Area6.png";
+    String ar7 = "/Users/" + result + "/Desktop/Dave's Project/Maps/Area7.png";
+    String ar8 = "/Users/" + result + "/Desktop/Dave's Project/Maps/Area8.png";
+    String ar9 = "/Users/" + result + "/Desktop/Dave's Project/Maps/Area9.png";
+    String charact = "/Users/" + result + "/Desktop/Dave's Project/Characters/Main Forward.png";
+    String villain3 = "Do you think you know who did it?";
+    boolean spoke = false;
+    boolean tree1 = false;
+    boolean tree2 = false;
+    boolean tree3 = false;
+    boolean tree4 = false;
+    boolean tree5 = false;
+    boolean sword = false;
+    boolean trueend = false;
     public Game(int x, int y) throws IOException
     {
         setTitle("Welcome");
         setSize(x,y);
-        File img = new File("/Users/Jonathan/Desktop/Dave's Project/Maps/Area5.png");
+        File img = new File(ar5);
         image = read(img);
         BufferedImage sprite = null;
-        File img2 = new File("/Users/Jonathan/Desktop/Dave's Project/Characters/Main Forward.png");
+        File img2 = new File(charact);
         try {
             sprite = read(img2);
             } catch (IOException ex) {
@@ -214,6 +250,7 @@ class Game extends JFrame
         JPanel panel = new JPanel();
         panel.add(label);
         panel.repaint();
+        setFocusable(true);
         this.add(panel);
         initialize();
         addMenu();
@@ -226,7 +263,6 @@ class Game extends JFrame
 private void addMenu() {
         JMenu Menu1 = new JMenu("File");
         JMenuItem MainMenu = new JMenuItem("Main Menu");
-        
         MainMenu.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                 try { 
@@ -263,43 +299,66 @@ private void addMenu() {
         menuBar.add(Menu1);
         menuBar.add(fileMenu);
         setJMenuBar(menuBar);
-
-        addMouseListener(new MouseAdapter()
+        setFocusable(true);
+        addKeyListener(new KeyAdapter()
             {
-                public void mouseClicked(MouseEvent event)
+                public void keyTyped(KeyEvent event)
                 {
-                    int x = event.getX();
-                    int y = event.getY();
-                    System.out.println(x);
-                    System.out.println(y);
-                    
-                    if(x > 0 && x < 320 && y < 320 && y > 0)
+                    if(event.getKeyChar() == 'k')
+                    {
+                        String result = JOptionPane.showInputDialog("What area would you like to warp to?");
+                        areaNum = parseInt(result);
+                    }
+                }
+                public void keyPressed(KeyEvent event)
+                {
+                    int x = event.getKeyCode();
+                    System.out.println(playerX);
+                    System.out.println(playerY);
+                    if(x == KeyEvent.VK_UP)
                     {
                         playerY = playerY - 8;
                     }
-                    if(x > 320 && x < 640 && y < 320 && y > 0)
+                    if(x == KeyEvent.VK_DOWN)
                     {
                         playerY = playerY + 8;
                     }
-                    if(x > 0 && x < 320 && y < 640 && y > 320)
+                    if(x == KeyEvent.VK_LEFT)
                     {
                         playerX = playerX - 8;
                     }
-                    if(x > 320 && x < 640 && y < 640 && y > 320)
+                    if(x == KeyEvent.VK_RIGHT)
                     {
                         playerX = playerX + 8;
                     }
-                    
+                    if(tree1 && tree2 && tree3 && tree4 && tree5)
+                        trueend = true;
+                    if(trueend)
+                    {
+                        File img;
+                        img = new File(ar3alt);
+                        BufferedImage Area3 = null;
+                        try {
+                            Area3 = read(img);
+                        } catch (IOException ex) {
+                            Logger.getLogger(Dangan.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        areas.set(2, Area3);
+                    }
                     positionCheck();
                     collisionCheck();
+                    interact();
+                    treePuzzle();
+                    
                     BufferedImage sprite = null;
-                    File img = new File("/Users/Jonathan/Desktop/Dave's Project/Characters/Main Forward.png");
+                    File img = new File(charact);
                     try {
                          sprite = read(img);
                     } catch (IOException ex) {
                         Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     temp = areas.get(areaNum - 1);
+                    
                     
                     for(int i = 0; i < 640; ++i)
                     {
@@ -313,6 +372,7 @@ private void addMenu() {
                 }
             }
             );
+        
     } 
     
 public void positionCheck() 
@@ -350,10 +410,9 @@ public void positionCheck()
         playerY = 0;
         areaNum = 5;
     }
-    if(areaNum == 3 && playerY > 639)
+    if(areaNum == 3 && playerY > 600)
     {
-        playerY = 0;
-        areaNum = 6;
+        playerY = 600;
     }
     if(areaNum == 3 && playerX < 0)
     {
@@ -380,10 +439,9 @@ public void positionCheck()
         playerX = 639;
         areaNum = 4;
     }
-    if(areaNum == 5 && playerX > 639)
+    if(areaNum == 5 && playerX > 600)
     {
-        playerX = 0;
-        areaNum = 6;
+        playerX = 600;
     }
     if(areaNum == 5 && playerY > 639)
     {
@@ -395,21 +453,7 @@ public void positionCheck()
         playerY = 639;
         areaNum = 2;
     }
-    if(areaNum == 6 && playerX < 0)
-    {
-        playerX = 639;
-        areaNum = 5;
-    }
-    if(areaNum == 6 && playerY > 639)
-    {
-        playerY = 0;
-        areaNum = 9;
-    }
-    if(areaNum == 6 && playerY < 0)
-    {
-        playerY = 639;
-        areaNum = 3;
-    }
+    
     if(areaNum == 7 && playerX > 639)
     {
         playerX = 0;
@@ -430,58 +474,100 @@ public void positionCheck()
         playerX = 639;
         areaNum = 7;
     }
-    if(areaNum == 8 && playerX > 639)
+    if(areaNum == 8 && playerX > 600)
     {
-        playerX = 0;
-        areaNum = 9;
+        playerX = 600;
     }
-    if(areaNum == 9 && playerX < 0)
-    {
-        playerX = 639;
-        areaNum = 8;
-    }
-    if(areaNum == 9 && playerY < 0)
-    {
-        playerY = 639;
-        areaNum = 6;
-    }
+    
     
 }
 
 public void collisionCheck() 
 {
     if(areaNum == 1)
-    {}
+    {
+        
+    }
     
     if(areaNum == 2)
-    {}
+    {
+        if(playerX > 8 && playerX < 150)
+            playerX = 8; //Left of Mountains
+        if(playerX > 150 && playerX < 184)
+            playerX = 184; //Right of Mountains
+        if(playerY < 110)
+            playerY = 110;
+    }
     
     if(areaNum == 3)
     {
-        if(playerX > 323 && playerY > 300 && playerY < 118)
+        if(!trueend)
+        {if(playerY < 90)
+            playerY = 90;}
+        if(trueend)
         {
-            if(playerY > 280)
-                playerY = 300;
-            if(playerY < 140)
-                playerY = 118;
-        
-        } //River
-        if(playerX < 26 && playerY < 341 && playerY > 146)
-            playerX = 30;
-        if(playerX < 26 && playerY < 132)
-            playerX = 30;
-        if(playerY > 132 && playerY < 200 && playerX < 189)
-            playerX = 189;
+            if(playerY < 90 && playerX > 440)
+                playerY = 90;
+            if(playerY < 90 && playerX < 408)
+                playerY = 90;
+        }
+        if(playerX > 576)
+            playerX = 576;
+        //LeftVolcano
+        if(playerY > 190 && playerY < 270 && playerX > 160 && playerX < 264)
+        {
+            if(playerY < 190 && playerX < 256 && playerX > 184) //Top
+            {
+                playerY = 158;
+            }
+            if(playerY > 240 && playerX < 256 && playerX > 184) //Bottom
+            {
+                playerY = 275;
+            }
+            if(playerY > 190 && playerY < 286 && playerX < 200) //Left
+            {
+                playerX = 170;
+            }
+            if(playerY > 190 && playerY < 286 && playerX > 210) //Right
+            {
+                playerX = 256;
+            }
+            
+        }
     }
     
     if(areaNum == 4)
     {
-    
+        
+        if(playerX > 312 && playerY > 125 && playerY < 150)
+        {
+            playerY = 120;
+        } //River Top
+        if(playerX > 312 && playerY > 280 && playerY < 250)
+        {
+            playerY = 303;
+        } //River Bottom
+        if(playerX > 312 && playerY > 130 && playerY < 290)
+        {
+            playerX = 312;
+        }
+         //River Left
+         
+        if(playerY < 60 && playerX > 351)
+            playerY = 57;
+         
+        if(playerX < 31 && playerY < 390 && playerY > 207)
+            playerX = 30;
+        if(playerX < 40 && playerY < 80)
+            playerX = 40;
+        if(playerY > 80 && playerY < 190 && playerX < 80)
+            playerX = 80;
+        
     }
     
     if(areaNum == 5)
     {
-        if((playerY > 360 && playerY < 441) && (playerX < 253 && playerX > 0)) //Left Bottom Wall
+        if((playerY > 360 && playerY < 441) && (playerX < 190 && playerX > 0)) //Left Bottom Wall
         {
             if(playerY < 401)
                 playerY = 360;
@@ -489,20 +575,13 @@ public void collisionCheck()
                 playerY = 441;
         
         }
-        if(playerY < 441 && playerY > 360 && playerX < 258)
-            playerX = 258; //Left Bottom Wall Right
+        if(playerY < 441 && playerY > 360 && playerX < 245)
+            playerX = 245; //Left Bottom Wall Right
         
         if(playerY < 357 && playerY > 158 && !(playerX > 338 || playerX < 360))
             playerY = 357; //River
         
-        if(playerY > 504 && playerY < 544 && playerX > 160 && playerX < 188)
-        {
-            System.out.println("Hint");
-            if(playerX < 174)
-                playerX = 160;
-            if(playerX > 174)
-                playerX = 188;
-        }
+        
         if((playerY > 360 && playerY < 441) && (playerX < 616 && playerX > 377)) //Left Bottom Wall
         {
             if(playerY < 401)
@@ -540,7 +619,6 @@ public void collisionCheck()
             if(playerY > 517)
                 playerY = 543;
         } //Right Tree
-        
         if(playerY > 602 && playerY < 647 && playerX > 209 && playerX < 240)
         {
             if(playerX < 225)
@@ -552,47 +630,198 @@ public void collisionCheck()
             if(playerY > 625)
                 playerY = 647;
         } //Left Tree
-        if((playerY > 67 && playerY < 148) && (playerX < 339 && playerX > 0)) //Left Bottom Wall
+        
+        if((playerY > 67 && playerY < 140) && (playerX < 310 && playerX > 0))
         {
             if(playerY < 124)
                 playerY = 67;
             if(playerY > 124)
-                playerY = 148;
+                playerY = 140;
         
         } //Left Wall
+        if(playerX < 247 && playerX > 207 && playerY > 511)
+        {
+            if(playerX < 220)
+                playerX = 207;
+            if(playerX > 220)
+                playerX = 247;
+        }
+        
+        if(playerX < 407 && playerX > 364 && playerY > 377)
+        {
+            if(playerX < 378)
+                playerX = 364;
+            if(playerX > 380)
+                playerX = 407;
+        }
         
         if(playerY < 70 && playerX > 361)
-            playerY = 66;
-        if((playerY < 291 && playerY > 66) && (playerX < 286)) //Left Bottom Wall
+            playerY = 65;
+        
+        if(playerY < 70 && playerX < 260)
+            playerY = 65; //Top Left Wall
+        
+        if((playerY < 291 && playerY > 66) && (playerX < 286))
         {
                 playerY = 291;
         
         } //River - WIP
+        
         if((playerY < 291 && playerY > 66) && (playerX > 321)) //Left Bottom Wall
         {
                 playerY = 291;
         }
-        if(playerY < 291 && playerX > 286 && playerX < 321)
-            playerY = 66;
-    }
-    if(areaNum == 6)
-    {
         
     }
     if(areaNum == 7)
     {
-        
+        //Left wall of trees
+        if(playerX < 40 && playerY < 355)
+            playerX = 40;
+        if(playerX > 188 && playerY > 560)
+            playerY = 560; //Right wall of trees
+        if(playerX > 468 && playerY < 545 && playerY > 455)
+        {
+            if(playerY > 508)
+                playerY = 545;
+            if(playerY < 508)
+                playerY = 455;
+        } //Bottom Wall
+        if(playerX > 388 && playerY < 448 && playerY > 368)
+        {
+            if(playerY > 408)
+                playerY = 450;
+            if(playerY < 408)
+                playerY = 365; //Top wall
+        }
     }
     if(areaNum == 8)
     {
         
     }
-    if(areaNum == 9)
-    {
-    
-    }
     //Add objects to map
     //Figure out pixel spots to prevent model from overlapping
+}
+
+public void interact() 
+{
+    //Logan
+    //Happy
+    //Serious
+    //Hint
+    //Villain
+    if(areaNum == 1)
+    {
+        if(playerY > 79 && playerY < 47 && playerX > 111 && playerX < 151)
+        {
+            System.out.println(logan);
+            playerX = 151;
+        }
+    }
+    if(areaNum == 2)
+    {
+    if(playerY > 135 && playerY < 191 && playerX > 490 && playerX < 520)
+        {
+            System.out.println(happy);
+            if(playerX < 505)
+                playerX = 490;
+            if(playerX > 505)
+                playerX = 520;
+        }
+    
+    if(playerX >= 0 && playerX <= 8 && playerY < 145)
+    {
+        System.out.println(hint2);
+        playerY = playerY + 8;
+    }
+        
+    }
+    if(areaNum == 3)
+    {
+        //Beanstalk
+    }
+    if(areaNum == 4)
+    {
+        if(playerY > 176 && playerY < 250 && playerX > 127 && playerX < 191)
+        {
+            System.out.println(serious);
+            if(playerX < 159)
+                playerX = 127;
+            if(playerX > 159)
+                playerX = 191;
+        }
+    }
+    if(areaNum == 5)
+    {
+        if(!spoke){
+    if(playerY > 504 && playerY < 583 && playerX > 160 && playerX < 188)
+        {
+            System.out.println(villain);
+            if(playerX < 174)
+                playerX = 160;
+            if(playerX > 174)
+                playerX = 188;
+            spoke = true;
+        }}
+        if(spoke){
+    if(playerY > 504 && playerY < 583 && playerX > 160 && playerX < 188)
+        {
+            System.out.println(villain3);
+            if(playerX < 174)
+                playerX = 160;
+            if(playerX > 174)
+                playerX = 188;
+            String result = JOptionPane.showInputDialog("Do you think you know who did it?");
+            if(result.equals("Yes"))
+            {
+                String result2 = JOptionPane.showInputDialog("Who did it?");
+                if(result2.equals("Camilo"))
+                    System.out.println(villain2);
+                finished = true;
+            }
+        }}
+    if(playerY > 447 && playerY < 479 && playerX > 87 && playerX < 151)
+        {
+            System.out.println(hint);
+            if(playerX < 119)
+                playerX = 87;
+            if(playerX > 119)
+                playerX = 151;
+        }
+    }
+    if(areaNum == 7)
+    {
+     if(playerY > 184 && playerY < 240 && playerX > 64 && playerX < 112)
+        {
+            System.out.println(yilu);
+            playerX = 115;
+        }   
+    }
+}
+
+public void treePuzzle()
+{
+    if(areaNum == 7)
+    {
+    
+        if(playerY > 109 && playerY < 137 && playerX > 181 && playerX < 193)
+            tree1 = true;   
+        
+    
+        if(playerY > 269 && playerY < 321 && playerX > 221 && playerX < 233)
+                    tree2 = true;
+            
+        if(playerY > 237 && playerY < 276 && playerX > 333 && playerX < 345)
+                        tree3 = true;
+                
+        if(playerY > 142 && playerY < 167 && playerX > 374 && playerX < 386)
+                                tree4 = true;
+        
+        if(playerY > 38 && playerY < 70 && playerX > 485 && playerX < 495)
+                                tree5 = true;
+    }
+    
+    
 }
 
 public void save() {
@@ -602,7 +831,7 @@ public void save() {
 public void initialize() {
     
     finished = false;
-    File img = new File("/Users/Jonathan/Desktop/Dave's Project/Maps/Area1.png");
+    File img = new File(ar1);
     BufferedImage Area1 = null;
             try {
                 Area1 = read(img);
@@ -610,7 +839,7 @@ public void initialize() {
                 Logger.getLogger(Dangan.class.getName()).log(Level.SEVERE, null, ex);
             }
     areas.add(Area1);
-    img = new File("/Users/Jonathan/Desktop/Dave's Project/Maps/Area2.png");
+    img = new File(ar2);
     BufferedImage Area2 = null;
             try {
                 Area2 = read(img);
@@ -618,7 +847,7 @@ public void initialize() {
                 Logger.getLogger(Dangan.class.getName()).log(Level.SEVERE, null, ex);
             }
     areas.add(Area2);
-    img = new File("/Users/Jonathan/Desktop/Dave's Project/Maps/Area3.png");
+    img = new File(ar3);
     BufferedImage Area3 = null;
             try {
                 Area3 = read(img);
@@ -626,7 +855,7 @@ public void initialize() {
                 Logger.getLogger(Dangan.class.getName()).log(Level.SEVERE, null, ex);
             }
     areas.add(Area3);
-    img = new File("/Users/Jonathan/Desktop/Dave's Project/Maps/Area4.png");
+    img = new File(ar4);
     BufferedImage Area4 = null;
             try {
                 Area4 = read(img);
@@ -634,7 +863,7 @@ public void initialize() {
                 Logger.getLogger(Dangan.class.getName()).log(Level.SEVERE, null, ex);
             }
     areas.add(Area4);
-    img = new File("/Users/Jonathan/Desktop/Dave's Project/Maps/Area5.png");
+    img = new File(ar5);
     BufferedImage Area5 = null;
             try {
                 Area5 = read(img);
@@ -642,7 +871,7 @@ public void initialize() {
                 Logger.getLogger(Dangan.class.getName()).log(Level.SEVERE, null, ex);
             }
     areas.add(Area5);
-    img = new File("/Users/Jonathan/Desktop/Dave's Project/Maps/Area6.png");
+    img = new File(ar6);
     BufferedImage Area6 = null;
             try {
                 Area6 = read(img);
@@ -650,7 +879,7 @@ public void initialize() {
                 Logger.getLogger(Dangan.class.getName()).log(Level.SEVERE, null, ex);
             }
     areas.add(Area6);
-    img = new File("/Users/Jonathan/Desktop/Dave's Project/Maps/Area7.png");
+    img = new File(ar7);
     BufferedImage Area7 = null;
             try {
                 Area7 = read(img);
@@ -658,7 +887,7 @@ public void initialize() {
                 Logger.getLogger(Dangan.class.getName()).log(Level.SEVERE, null, ex);
             }
     areas.add(Area7);
-    img = new File("/Users/Jonathan/Desktop/Dave's Project/Maps/Area8.png");
+    img = new File(ar8);
     BufferedImage Area8 = null;
             try {
                 Area8 = read(img);
@@ -666,7 +895,7 @@ public void initialize() {
                 Logger.getLogger(Dangan.class.getName()).log(Level.SEVERE, null, ex);
             }
     areas.add(Area8);
-    img = new File("/Users/Jonathan/Desktop/Dave's Project/Maps/Area9.png");
+    img = new File(ar9);
     BufferedImage Area9 = null;
             try {
                 Area9 = read(img);
@@ -677,6 +906,21 @@ public void initialize() {
     areaNum = 5;
     
 }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
 
 
